@@ -1,9 +1,7 @@
 spring:
   devtools:
     livereload:
-      # livereload ?? ??
       enabled: true
     remote:
       restart:
-        # ?? ??? ???
         enabled: true
