@@ -5,3 +5,8 @@ spring:
     remote:
       restart:
         enabled: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+  h2:
+    console:
+      enabled: true
