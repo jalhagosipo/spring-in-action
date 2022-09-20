@@ -17,11 +17,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http.headers().frameOptions().sameOrigin()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/design", "/orders")
                 .access("hasRole('ROLE_USER')")
-                .antMatchers("/", "/**").access("permitAll")
+                .antMatchers("/", "/**", "/h2-console/**").permitAll()
+                .and()
+                .csrf()
+                .ignoringAntMatchers("/h2-console/**")
                 .and()
                 .httpBasic();
         return http.build();
