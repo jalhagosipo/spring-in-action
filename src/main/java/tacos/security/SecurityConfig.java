@@ -6,9 +6,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -37,29 +34,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsManager users(DataSource dataSource) {
-        UserDetails user1 = User.builder()
-                .username("user1")
-                .password(passwordEncoder().encode("password1"))
-                .authorities("ROLE_USER")
-                .build();
-        UserDetails user2 = User.builder()
-                .username("user2")
-                .password(passwordEncoder().encode("password2"))
-                .authorities("ROLE_USER")
-                .build();
-        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-        users.createUser(user1);
-        users.createUser(user2);
-        return users;
-    }
-
-    @Bean
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
-                .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
+                .addScripts("user_schema.sql", "user_data.sql")
                 .build();
+    }
+
+    @Bean
+    public UserDetailsManager authenticateUsers(DataSource dataSource) {
+        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+        users.setUsersByUsernameQuery(
+            "SELECT username, password, enabled FROM tbl_users " +
+            "WHERE username = ?"
+        );
+        users.setAuthoritiesByUsernameQuery(
+            "SELECT username, authority from tbl_authorities " +
+            "WHERE username = ?"
+        );
+
+        return users;
     }
 
     @Bean
