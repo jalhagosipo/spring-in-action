@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/design", "/orders")
                 .access("hasRole('ROLE_USER')")
-                .antMatchers("/", "/**", "/h2-console/**").permitAll()
+                .antMatchers("/", "/**").permitAll()
                 .and()
                 .csrf()
                 .ignoringAntMatchers("/h2-console/**")
