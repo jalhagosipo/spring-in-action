@@ -15,6 +15,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.headers().frameOptions().sameOrigin()
                 .and()
+                .httpBasic().disable()
                 .authorizeRequests()
                 .antMatchers("/design", "/orders")
                 .access("hasRole('ROLE_USER')")
@@ -27,9 +28,7 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .and()
                 .csrf()
-                .ignoringAntMatchers("/h2-console/**")
-                .and()
-                .httpBasic();
+                .ignoringAntMatchers("/h2-console/**");
         return http.build();
     }
 
