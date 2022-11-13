@@ -1,1 +1,3 @@
 rootProject.name = 'taco-cloud'
+include 'taco-api'
+
