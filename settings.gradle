@@ -1,4 +1,5 @@
 rootProject.name = 'taco-cloud'
 include 'taco-api'
 include 'taco-jms'
+include 'taco-domain'
 
