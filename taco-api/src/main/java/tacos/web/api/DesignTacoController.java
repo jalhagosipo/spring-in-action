@@ -7,6 +7,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import tacos.Taco;
 import tacos.data.TacoRepository;
 
@@ -26,12 +27,20 @@ public class DesignTacoController {
         this.tacoRepo = tacoRepo;
     }
 
+//    @GetMapping("/recent")
+//    public Flux<Taco> recentTacos() {
+//        return tacoRepo.findAll().take(12);
+//    }
     @GetMapping("/recent")
-    public Iterable<Taco> recentTacos() {
-        PageRequest page = PageRequest.of(
-                0, 12, Sort.by("createdAt").descending());
-        return tacoRepo.findAll(page).getContent();
+    public Flux<Taco> recentTacos() {
+        return Flux.fromIterable(tacoRepo.findAll()).take(12);
     }
+//    @GetMapping("/recent")
+//    public Iterable<Taco> recentTacos() {
+//        PageRequest page = PageRequest.of(
+//                0, 12, Sort.by("createdAt").descending());
+//        return tacoRepo.findAll(page).getContent();
+//    }
 
     @GetMapping("/recenth")
     public CollectionModel<EntityModel<Taco>> recenthTacos() {
@@ -47,6 +56,10 @@ public class DesignTacoController {
         return recentCollectionModel;
     }
 
+//    @GetMapping("/{id}")
+//    public Mono<Taco> tacoById(@PathVariable("id") String id) {
+//        return tacoRepo.findById(id);
+//    }
     @GetMapping("/{id}")
     public ResponseEntity<Taco> tacoById(@PathVariable("id") Long id) {
         Optional<Taco> optTaco = tacoRepo.findById(id);
@@ -56,6 +69,11 @@ public class DesignTacoController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
+//    @PostMapping(consumes = "application/json")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public Mono<Taco> postTaco(@RequestBody Mono<Taco> tacoMono) {
+//        return tacoRepo.saveAll(tacoMono).next();
+//    }
     @PostMapping(consumes="application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Taco postTaco(@RequestBody Taco taco) {
