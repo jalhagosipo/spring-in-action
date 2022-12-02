@@ -13,8 +13,8 @@ import java.util.List;
 public class Taco {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+//    @GeneratedValue(strategy=GenerationType.AUTO)
+    private String id;
 
     private Date createdAt;
 
